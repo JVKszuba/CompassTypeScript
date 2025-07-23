@@ -1,7 +1,29 @@
+enum ProjectStatus { Active, Finished }
+
+class Project {
+
+    id: string;
+    title: string;
+    description: string;
+    people: number;
+    status: ProjectStatus;
+
+    constructor(id: string, title: string, description: string, people: number, status: ProjectStatus) {
+
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.people = people;
+        this.status = status;
+    }
+}
+
+type Listener = (items: Project[]) => void
+
 class ProjectState {
 
-    private listeners: any[] = [];
-    private projects: any[] = [];
+    private listeners: Listener[] = [];
+    private projects: Project[] = [];
     private static instance: ProjectState;
 
     private constructor() {}
@@ -13,20 +35,14 @@ class ProjectState {
         return this.instance = new ProjectState();
     }
 
-    addListener(listenerFunction: Function) {
+    addListener(listenerFunction: Listener) {
 
         this.listeners.push(listenerFunction);
     }
 
     addProject(title: string, description: string, numPeople: number) {
 
-        const newProject = {
-
-            id: Math.random().toString(),
-            title: title,
-            description: description,
-            people: numPeople,
-        }
+        const newProject = new Project(Math.random().toString(), title, description, numPeople, ProjectStatus.Active);
 
         this.projects.push(newProject);
 
@@ -62,7 +78,7 @@ function validate(validatableInput: Validatable): boolean {
     return isValid;
 }
 
-function autoBind(target: any, methodName: string, descriptor: PropertyDescriptor) {
+function autoBind(_: any, __: string, descriptor: PropertyDescriptor) {
 
     const originalMethod = descriptor.value;
     const adjDescriptor: PropertyDescriptor = {
@@ -80,7 +96,7 @@ class ProjectList {
     templateElement: HTMLTemplateElement;
     hostElement: HTMLDivElement;
     element: HTMLElement;
-    assignedProjects: any[];
+    assignedProjects: Project[];
 
     constructor(private type: 'active' | 'finished' ) {
 
@@ -93,7 +109,7 @@ class ProjectList {
         this.element = importedNode.firstElementChild as HTMLElement;
         this.element.id = `${this.type}-projects`;
 
-        projectState.addListener((projects: any[]) => {this.assignedProjects = projects; this.renderProjects()});
+        projectState.addListener((projects: Project[]) => {this.assignedProjects = projects; this.renderProjects()});
 
         this.attach();
         this.renderContent();
@@ -108,7 +124,6 @@ class ProjectList {
             const listItem = document.createElement("li");
 
             listItem.textContent = projectItem.title;
-
             listElement.appendChild(listItem);
         }
     }
