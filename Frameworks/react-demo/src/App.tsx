@@ -3,6 +3,7 @@ import { useState } from "react";
 import Header from "./components/Header.tsx";
 import goalsImg from "./assets/goals.jpg";
 import CourseGoals from "./components/CourseGoals.tsx";
+import NewGoal from "./components/NewGoal.tsx";
 
 function App() {
 
@@ -21,7 +22,8 @@ function App() {
         <Header image={{src: goalsImg, alt: 'A list of goals'}}>
             <h1>Your Course Goals</h1>
         </Header>
-        <CourseGoals goals={goals} onDelete={handleDeleteGoal} />
+        <CourseGoals goals={goals} onDelete={handleDeleteGoal}/>
+        <NewGoal/>
     </main>
   )
 }
