@@ -14,7 +14,12 @@ function App() {
 
     function handleDeleteGoal(id: number) {
 
-        setGoals((prevGoals) => prevGoals.filter((g) => g.id !== id));
+        setGoals(prevGoals => prevGoals.filter((g) => g.id !== id));
+    }
+
+    function handleAddGoal(text: string, summary: string) {
+
+        setGoals(prevGoals => prevGoals.concat({id: Math.random(), title: text, description: summary}));
     }
 
   return (
@@ -23,7 +28,7 @@ function App() {
             <h1>Your Course Goals</h1>
         </Header>
         <CourseGoals goals={goals} onDelete={handleDeleteGoal}/>
-        <NewGoal/>
+        <NewGoal onAdd={handleAddGoal}/>
     </main>
   )
 }
